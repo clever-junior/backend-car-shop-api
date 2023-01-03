@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import ICar from '../Interfaces/ICar';
-import CarService from '../Services/CreateCarService';
+import CarService from '../Services/CarService';
 
 export default class CarController {
   private req: Request;
@@ -34,6 +34,32 @@ export default class CarController {
     } catch (error) {
       const { message } = error as Error;
       return this.res.status(500).json({ message });
+    }
+  }
+
+  public async read() {
+    try {
+      const cars = await this.service.read();
+
+      return this.res.status(200).json(cars);
+    } catch (error) {
+      const { message } = error as Error;
+      return this.res.status(500).json({ message });
+    }
+  }
+
+  public async readById() {
+    const { id } = this.req.params;
+
+    try {
+      const car = await this.service.readOne(id);
+
+      if (!car) { return this.res.status(404).json({ message: 'Car not found' }); }
+
+      return this.res.status(200).json(car);
+    } catch (error) {
+      const { message } = error as Error;
+      return this.res.status(422).json({ message });
     }
   }
 }

@@ -2,7 +2,7 @@ import Car from '../Domains/Car';
 import ICar from '../Interfaces/ICar';
 import CarODM from '../Models/Car';
 
-class CreateCarService {
+export default class CarService {
   private createDomain(data: ICar | null) {
     if (data) {
       return new Car(data);
@@ -18,6 +18,19 @@ class CreateCarService {
 
     return this.createDomain(newCar);
   }
-}
 
-export default CreateCarService;
+  public async read() {
+    const carODM = new CarODM();
+    const cars = await carODM.read();
+
+    const response = cars.map((car) => this.createDomain(car));
+
+    return response;
+  }
+
+  public async readOne(id: string) {
+    const carODM = new CarODM();
+    const car = await carODM.readOne(id);
+    return this.createDomain(car);
+  }
+}
