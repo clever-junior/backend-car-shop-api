@@ -4,8 +4,10 @@ import {
   model,
   models,
   isValidObjectId,
+  UpdateQuery,
 } from 'mongoose';
 import ICar from '../Interfaces/ICar';
+import ErrorHandler from '../errors';
 
 export default class CarODM {
   private schema: Schema;
@@ -39,5 +41,20 @@ export default class CarODM {
     }
 
     throw new Error('Invalid mongo id');
+  }
+
+  async update(id: string, data: ICar): Promise<ICar | null | undefined> {
+    if (isValidObjectId(id)) {
+      const updatedCar = this.model
+        .findOneAndUpdate({ _id: { $eq: id } }, { ...data } as UpdateQuery<ICar>, { new: true });
+
+      if (!updatedCar) {
+        throw new ErrorHandler('Car not found', 404);
+      }
+      
+      return updatedCar;
+    }
+
+    throw new ErrorHandler('Invalid mongo id', 422);
   }
 }

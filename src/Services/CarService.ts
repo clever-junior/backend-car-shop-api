@@ -1,6 +1,7 @@
 import Car from '../Domains/Car';
 import ICar from '../Interfaces/ICar';
 import CarODM from '../Models/Car';
+import ErrorHandler from '../errors';
 
 export default class CarService {
   private createDomain(data: ICar | null) {
@@ -32,5 +33,15 @@ export default class CarService {
     const carODM = new CarODM();
     const car = await carODM.readOne(id);
     return this.createDomain(car);
+  }
+
+  public async update(id: string, data: ICar) {
+    const carODM = new CarODM();
+
+    const car = await carODM.update(id, data);
+    
+    if (!car) { throw new ErrorHandler('Car not found', 404); }
+
+    if (car) { return this.createDomain(car); }
   }
 }
