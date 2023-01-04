@@ -4,18 +4,16 @@ import CarODM from '../Models/Car';
 import ErrorHandler from '../errors';
 
 export default class CarService {
-  private createDomain(data: ICar | null) {
-    if (data) {
-      return new Car(data);
-    }
+  private createDomain(car: ICar | null) {
+    if (car) { return new Car(car); }
 
     return null;
   }
 
-  public async create(data: ICar) {
+  public async create(car: ICar) {
     const carODM = new CarODM();
 
-    const newCar = await carODM.create(data);
+    const newCar = await carODM.create(car);
 
     return this.createDomain(newCar);
   }

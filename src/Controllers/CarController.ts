@@ -17,7 +17,7 @@ export default class CarController {
     this.service = new CarService();
   }
 
-  public async create() {
+  public async store() {
     const car: ICar = {
       model: this.req.body.model,
       year: this.req.body.year,
@@ -33,8 +33,8 @@ export default class CarController {
 
       return this.res.status(201).json(newCar);
     } catch (error) {
-      const { message } = error as Error;
-      return this.res.status(500).json({ message });
+      const { message, status } = error as ErrorHandler;
+      return this.res.status(status).json({ message });
     }
   }
 
