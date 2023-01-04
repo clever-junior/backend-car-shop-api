@@ -18,12 +18,10 @@ export default abstract class AbstractODM<T> {
 
   async update(id: string, data: T) {
     if (isValidObjectId(id)) {
-      const updatedCar = this.model
+      const updatedVehicle = this.model
         .findOneAndUpdate({ _id: { $eq: id } }, { ...data } as UpdateQuery<T>, { new: true });
       
-      if (!updatedCar) { throw new ErrorHandler('Car not found', 404); }
-      
-      return updatedCar;
+      return updatedVehicle;
     }
     
     throw new ErrorHandler('Invalid mongo id', 422);
