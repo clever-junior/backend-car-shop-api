@@ -1,4 +1,4 @@
-import ICar from '../../../src/Interfaces/ICar';
+import ICar from '../../../../src/Interfaces/ICar';
 
 const uno = 'Uno da Escada';
 
@@ -12,13 +12,13 @@ export const validCar: ICar = {
 };
 
 export const validCarWithStatus: ICar = {
-  model: uno,
-  year: 1960,
-  color: 'Red',
+  model: 'Marea',
+  year: 2002,
+  color: 'Black',
   status: true,
-  buyValue: 1500,
-  doorsQty: 2,
-  seatsQty: 2,
+  buyValue: 15.99,
+  doorsQty: 4,
+  seatsQty: 5,
 };
 
 export const updatedCar: ICar = {

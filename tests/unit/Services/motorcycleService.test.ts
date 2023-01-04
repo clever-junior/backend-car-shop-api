@@ -1,66 +1,64 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { Model, Mongoose } from 'mongoose';
-import ICar from '../../../src/Interfaces/ICar';
-import Car from '../../../src/Domains/Car';
-import CarService from '../../../src/Services/CarService';
+import IMotorcycle from '../../../src/Interfaces/IMotorcycle';
+import Motorcycle from '../../../src/Domains/Motorcycle';
+import MotorcycleService from '../../../src/Services/MotorcycleService';
 import {
-  carResponse,
-  carsArrayResponse,
-} from './mocks/carsMock';
+  motorcycleResponse, motorcyclesArrayResponse, updatedMotorcycle } from './mocks/motorcyclesMock';
 import ErrorHandler from '../../../src/errors';
 
-describe('Deveria criar um carro', function () {
+describe('Deveria criar um motocicleta', function () {
   afterEach(function () { return sinon.restore(); });
 
-  it('Deveria criar um carro com sucesso', async function () {
-    const carInput: ICar = {
+  it('Deveria criar um motocicleta com sucesso', async function () {
+    const MotorcycleInput: IMotorcycle = {
       model: 'Marea',
       year: 2002,
       color: 'Black',
       status: true,
       buyValue: 15.990,
-      doorsQty: 4,
-      seatsQty: 5,
+      category: 'Street',
+      engineCapacity: 600,
     };
-    const carOutput: Car = new Car(
-      carInput,
+    const MotorcycleOutput: Motorcycle = new Motorcycle(
+      MotorcycleInput,
     );
 
-    sinon.stub(Model, 'create').resolves(carOutput);
+    sinon.stub(Model, 'create').resolves(MotorcycleOutput);
 
     // Act
-    const service = new CarService();
-    const result = await service.create(carInput);
+    const service = new MotorcycleService();
+    const result = await service.create(MotorcycleInput);
 
     // Assert
-    expect(result).to.be.deep.equal(carOutput);
+    expect(result).to.be.deep.equal(MotorcycleOutput);
   });
-  
-  it('Deveria retornar todos os carros com sucesso', async function () {
-    sinon.stub(Model, 'find').resolves(carsArrayResponse);
+
+  it('Deveria retornar todos os motocicletas com sucesso', async function () {
+    sinon.stub(Model, 'find').resolves(motorcyclesArrayResponse);
 
     // Act
-    const service = new CarService();
+    const service = new MotorcycleService();
     const result = await service.read();
 
     // Assert
 
-    expect(result).to.be.deep.equal(carsArrayResponse);
+    expect(result).to.be.deep.equal(motorcyclesArrayResponse);
   });
 
-  it('Deveria retornar um carro com sucesso', async function () {
+  it('Deveria retornar um motocicleta com sucesso', async function () {
     const id = '634852326b35b59438fbea2f';
 
-    sinon.stub(Model, 'findOne').resolves(carResponse);
+    sinon.stub(Model, 'findOne').resolves(motorcycleResponse);
 
     // Act
-    const service = new CarService();
+    const service = new MotorcycleService();
     const result = await service.readOne(id);
 
     // Assert
 
-    expect(result).to.be.deep.equal(carResponse);
+    expect(result).to.be.deep.equal(motorcycleResponse);
   });
 
   it('Deveria retornar um id inválido', async function () {
@@ -73,7 +71,7 @@ describe('Deveria criar um carro', function () {
 
     // Act
     try {
-      const service = new CarService();
+      const service = new MotorcycleService();
       await service.readOne(id);
     } catch (error) {
       const { message } = error as ErrorHandler;
@@ -82,7 +80,7 @@ describe('Deveria criar um carro', function () {
     }
   });
 
-  it('Deveria retornar um error carro não encontrado', async function () {
+  it('Deveria retornar um error moto não encontrada', async function () {
     const id = '634852326b35b59438fbea2f';
 
     const mongoose = new Mongoose();
@@ -92,7 +90,7 @@ describe('Deveria criar um carro', function () {
 
     // Act
     try {
-      const service = new CarService();
+      const service = new MotorcycleService();
       await service.readOne(id);
     } catch (error) {
       const { message } = error as ErrorHandler;
@@ -103,45 +101,25 @@ describe('Deveria criar um carro', function () {
 
   it('Consegue atualizar um carro com sucesso', async function () {
     const id = '634852326b35b59438fbea2f';
-
-    const carInput: ICar = {
-      model: 'Marea',
-      year: 2002,
-      color: 'Black',
-      status: true,
-      buyValue: 15.990,
-      doorsQty: 4,
-      seatsQty: 5,
-    };
       
-    sinon.stub(Model, 'findOneAndUpdate').resolves(carResponse);
+    sinon.stub(Model, 'findOneAndUpdate').resolves(motorcycleResponse);
 
-    const service = new CarService();
+    const service = new MotorcycleService();
     
-    const result = await service.update(id, carInput);
+    const result = await service.update(id, updatedMotorcycle);
 
-    expect(result).to.be.deep.equal(carResponse);
+    expect(result).to.be.deep.equal(motorcycleResponse);
   });
 
   it('Não consegue atualizar um carro com sucesso', async function () {
     const id = '634852326b35b59438fbea2f';
-
-    const carInput: ICar = {
-      model: 'Marea',
-      year: 2002,
-      color: 'Black',
-      status: true,
-      buyValue: 15.990,
-      doorsQty: 4,
-      seatsQty: 5,
-    };
       
     sinon.stub(Model, 'findOneAndUpdate').resolves(null);
 
     try {
-      const service = new CarService();
+      const service = new MotorcycleService();
       
-      await service.update(id, carInput);
+      await service.update(id, updatedMotorcycle);
     } catch (error) {
       const { message } = error as ErrorHandler;
       expect(message).to.be.equal('Car not found');
@@ -151,20 +129,10 @@ describe('Deveria criar um carro', function () {
   it('Não consegue atualizar um carro com sucesso por causa do id', async function () {
     const id = '6348523f';
 
-    const carInput: ICar = {
-      model: 'Marea',
-      year: 2002,
-      color: 'Black',
-      status: true,
-      buyValue: 15.990,
-      doorsQty: 4,
-      seatsQty: 5,
-    };
-
     try {
-      const service = new CarService();
+      const service = new MotorcycleService();
       
-      await service.update(id, carInput);
+      await service.update(id, updatedMotorcycle);
     } catch (error) {
       const { message } = error as ErrorHandler;
       expect(message).to.be.equal('Invalid mongo id');
