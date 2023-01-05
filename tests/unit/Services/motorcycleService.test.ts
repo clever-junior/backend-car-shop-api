@@ -111,7 +111,7 @@ describe('Deveria criar um motocicleta', function () {
     expect(result).to.be.deep.equal(motorcycleResponse);
   });
 
-  it('Não consegue atualizar um carro com sucesso', async function () {
+  it('Não consegue atualizar um motocicleta com sucesso', async function () {
     const id = '634852326b35b59438fbea2f';
       
     sinon.stub(Model, 'findOneAndUpdate').resolves(null);
@@ -122,11 +122,11 @@ describe('Deveria criar um motocicleta', function () {
       await service.update(id, updatedMotorcycle);
     } catch (error) {
       const { message } = error as ErrorHandler;
-      expect(message).to.be.equal('Car not found');
+      expect(message).to.be.equal('Motorcycle not found');
     }
   });
   
-  it('Não consegue atualizar um carro com sucesso por causa do id', async function () {
+  it('Não consegue atualizar um motocicleta com sucesso por causa do id', async function () {
     const id = '6348523f';
 
     try {
